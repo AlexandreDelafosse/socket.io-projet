@@ -82,6 +82,22 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+
+console.log(
+    "longueur user1: ",
+    getDistanceFromLatLonInKm(latlngs1)
+    +
+    getDistanceFromLatLonInKm(latlngsarrivalUser1)
+);
+console.log(
+    "longueur user 2: ",
+    getDistanceFromLatLonInKm(latlngs2)
+    +
+    getDistanceFromLatLonInKm(latlngsarrivalUser2)
+);
+
+
+
 user1.on("dragstart", () => {
 
     map.removeLayer(polylineUser1Resto1);
@@ -95,6 +111,13 @@ user1.on("dragend", () => {
     polylineUser1Resto1 = L.polyline(latlngs1, {
         color: 'red'
     }).addTo(map);
+
+    console.log(
+        "longueur user1: ",
+        getDistanceFromLatLonInKm(latlngs1)
+        +
+        getDistanceFromLatLonInKm(latlngsarrivalUser1)
+    );
 })
 
 user2.on("dragstart", () => {
@@ -110,6 +133,13 @@ user2.on("dragend", () => {
     polylineUser2Resto2 = L.polyline(latlngs2, {
         color: 'blue'
     }).addTo(map);
+
+    console.log(
+        "longueur user 2: ",
+        getDistanceFromLatLonInKm(latlngs2)
+        +
+        getDistanceFromLatLonInKm(latlngsarrivalUser2)
+    );
 })
 
 arrivée.on("dragstart", () => {
@@ -134,12 +164,38 @@ arrivée.on("dragend", () => {
     polylineResto2Arrivee = L.polyline(latlngsarrivalUser2, {
         color: 'blue'
     }).addTo(map);
+
+    
+    console.log(
+        "longueur user1: ",
+        getDistanceFromLatLonInKm(latlngs1)
+        +
+        getDistanceFromLatLonInKm(latlngsarrivalUser1)
+    );
+    console.log(
+        "longueur user 2: ",
+        getDistanceFromLatLonInKm(latlngs2)
+        +
+        getDistanceFromLatLonInKm(latlngsarrivalUser2)
+    );
 })
 
 // wrap map.locate in a function    
-function locate() {
-    console.log(user1._latlng.lng);
-    // console.log(user1._latlng.lat);
+function getDistanceFromLatLonInKm(latLan) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(latLan[1].lat - latLan[0].lat); // deg2rad below
+    var dLon = deg2rad(latLan[1].lng - latLan[0].lng);
+    var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(latLan[0].lat)) * Math.cos(deg2rad(latLan[1].lat)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI / 180)
 }
 
 // call locate every 3 seconds... forever
