@@ -10,17 +10,34 @@ let restaurantIcon = L.icon({
     iconSize: [45, 45], // size of the icon
 });
 
+let users = [{
+    name: "Theodore",
+    position: [48.866964576087014, 2.3514963324831593],
+    heureDepart: 11
+
+}, {
+    name: "Alex",
+    position: [48.841235456968775, 2.40570516914324],
+    heureDepart: 11
+}]
+
+// let user1 = L.marker([users[0].position[0], users[0].position[0]], {
 let user1 = L.marker([48.866964576087014, 2.3514963324831593], {
     icon: manIcon,
     draggable: true
-    
+
 
 }).addTo(map);
+user1.on("dragend", () => {
+    console.log("hello");
+})
+
+console.log(user1);
 
 let user2 = L.marker([48.841235456968775, 2.40570516914324], {
     icon: manIcon,
     draggable: true
-    
+
 }).addTo(map);
 
 
@@ -43,3 +60,38 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+
+
+var current_position, current_accuracy;
+
+function onLocationFound(e) {
+    // if position defined, then remove the existing position marker and accuracy circle from the map
+    if (current_position) {
+        map.removeLayer(current_position);
+        map.removeLayer(current_accuracy);
+    }
+
+    var radius = e.accuracy / 2;
+
+    current_position = L.marker(e.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    current_accuracy = L.circle(e.latlng, radius).addTo(map);
+}
+
+function onLocationError(e) {
+    alert(e.message);
+}
+
+map.on('locationfound', onLocationFound);
+map.on('locationerror', onLocationError);
+
+// wrap map.locate in a function    
+function locate() {
+    console.log(user1._latlng.lng);
+    // console.log(user1._latlng.lat);
+}
+
+// call locate every 3 seconds... forever
+setInterval(locate, 5000);
