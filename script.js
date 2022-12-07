@@ -159,16 +159,19 @@ let restoList = [
 ]
 
 arrivée.on("dragstart", () => {
+    console.log(userInfo.length);
 
     userInfo.forEach(theUser => {
         map.removeLayer(theUser.polylineArrivee);
     });
 
+    console.log(arrivée.getLatLng());
 
 })
 
 arrivée.on("dragend", () => {
     updateArrive();
+    console.log(arrivée.getLatLng());
 })
 
 function updateArrive() {
@@ -199,7 +202,6 @@ function updateArrive() {
 
 // wrap map.locate in a function    
 function getDistanceFromLatLonInKm(latLan) {
-    console.log(latLan);
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(latLan[1].lat - latLan[0].lat); // deg2rad below
     var dLon = deg2rad(latLan[1].lng - latLan[0].lng);
@@ -213,27 +215,6 @@ function getDistanceFromLatLonInKm(latLan) {
 }
 
 function changeResto(params) {
-    // userInfo.forEach(theUser => {
-    //     theUser.resto = restoList[params];
-
-    //     map.removeLayer(theUser.polyline);
-    //     map.removeLayer(theUser.polylineArrivee);
-
-    //     theUser.latlng = [];
-    //     theUser.latlngArrivee = [];
-    //     theUser.latlng.push(theUser.user.getLatLng());
-    //     theUser.latlng.push(theUser.resto.getLatLng());
-
-    //     theUser.latlngArrivee.push(theUser.resto.getLatLng());
-    //     theUser.latlngArrivee.push(arrivée.getLatLng());
-
-    //     theUser.polyline = L.polyline(theUser.latlng, {
-    //         color: theUser.color
-    //     }).addTo(map);
-    //     theUser.polylineArrivee = L.polyline(theUser.latlngArrivee, {
-    //         color: theUser.color
-    //     }).addTo(map);
-    // });
 
     userInfo[0].resto = restoList[params];
 
@@ -280,9 +261,6 @@ function onDragUser() {
 
             theUser.distance = getDistanceFromLatLonInKm(theUser.latlng) +
                 getDistanceFromLatLonInKm(theUser.latlngArrivee)
-            console.log(
-                "mon new tes"
-            );
         })
     });
 }
@@ -320,8 +298,10 @@ function createUser() {
 
     var latlngArrivalNewUser = Array();
     latlngArrivalNewUser.push(newUserInfo.resto.getLatLng());
+    
+    console.log(arrivée.getLatLng());
     latlngArrivalNewUser.push(arrivée.getLatLng());
-    var polylineRestoArrivee = L.polyline(latlngsarrivalUser1, {
+    var polylineRestoArrivee = L.polyline(latlngArrivalNewUser, {
         color: newUserInfo.color
     }).addTo(map);
 
@@ -335,3 +315,4 @@ function createUser() {
 
     onDragUser();
 }
+
