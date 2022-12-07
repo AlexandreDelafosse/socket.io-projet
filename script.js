@@ -162,10 +162,7 @@ user1.on("dragend", () => {
     userInfo[0].distance = getDistanceFromLatLonInKm(latlngs1) +
         getDistanceFromLatLonInKm(latlngsarrivalUser1)
     console.log(
-        "longueur user1: ", userInfo[0].distance
-    );
-    console.log(
-        latlngsarrivalUser1
+        "longueur user1: ", latlngs1
     );
 })
 
