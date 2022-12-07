@@ -22,8 +22,6 @@
             <button onclick="changeResto(1)">2</button>
             <button onclick="changeResto(2)">3</button>
 
-            <button onclick=" createUser()">add friends</button>
-
         </div>
 
         <ul id="messages"></ul>
@@ -37,12 +35,59 @@
         integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous">
     </script>
 
+    <script type="text/javascript" src="script.js"></script>
     <script>
         let socket = io("http://localhost:3000/");
 
         let messages = document.getElementById('messages');
         let form = document.getElementById('form');
         let input = document.getElementById('input');
+
+        let newInfo = {
+            name: "theodore",
+            resto: "a"
+        }
+
+        function connectNewUser(newInfo) {
+            let newUserInfo = createUser(newInfo);
+
+            socket.emit("addOneUser", newUserInfo)
+        }
+        connectNewUser(newInfo);
+
+        socket.on("showUser", (oneUser) => {
+            addNewUserToMap(oneUser);
+        })
+
+        // function getAllUser() {
+        //     socket.emit("getUsers");
+        //     socket.on("getAllUser", (allUsers) => {
+        //         console.log(allUsers);
+        //         allUsers.forEach(user => {
+        //             // createUser(user);
+        //             newUser();
+        //         });
+        //     });
+
+        // }
+        // getAllUser();
+
+        // function newUser() {
+        //     let itisme = {
+        //         name: "me",
+        //         resto: "a",
+        //         distance: 0,
+        //         latlng: newUserInfo.latlng,
+        //         latlngArrivee: newUserInfo.latlngArrivee,
+        //         color: newUserInfo.color,
+        //     }
+        //     let theNewUser = createUser(itisme);
+
+        //     // console.log("theNewUser",theNewUser);
+        //     // console.log("theNewUserString", JSON.stringify(theNewUser));
+        //     socket.emit('addOneUser', theNewUser);
+        // }
+        // // newFunc();
 
         form.addEventListener('submit', function (e) {
             console.log("input.value", input.value);
@@ -59,10 +104,8 @@
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
         });
-
     </script>
 
-    <script type="text/javascript" src="script.js"></script>
     <script type="text/javascript" src="index.js"></script>
 </body>
 

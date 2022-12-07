@@ -1,3 +1,5 @@
+// const {parse, stringify} = require('flatted/cjs');
+
 let map = L.map('map').setView([48.866964576087014, 2.3514963324831593], 12);
 
 let manIcon = L.icon({
@@ -11,27 +13,28 @@ let restaurantIcon = L.icon({
 
 });
 
+/* create user */
 let user1 = L.marker([48.866964576087014, 2.3514963324831593], {
     icon: manIcon,
     draggable: true,
     id: "testetes"
 
 
-}).addTo(map);
+});
 
 let user2 = L.marker([48.841235456968775, 2.40570516914324], {
     icon: manIcon,
     draggable: true
 
-}).addTo(map);
+});
 
 let user3 = L.marker([48.831235456968775, 2.40970516914324], {
     icon: manIcon,
     draggable: true
 
-}).addTo(map);
+});
 
-
+/* create restaurant */
 let restaurant1 = L.marker([48.84901822720585, 2.312037311292086], {
     icon: restaurantIcon,
     draggable: false
@@ -47,12 +50,12 @@ let restaurant3 = L.marker([48.85901822720584, 2.42037311292085], {
     draggable: false
 }).addTo(map);
 
+/* create finishing line */
 let arrivée = L.marker([48.8232403909458, 2.339669183884956], {
     draggable: true
 }).addTo(map);
 
 /* Lignes entre users et restaurants */
-
 var latlngs1 = Array();
 var latlngs2 = Array();
 var latlngs3 = Array();
@@ -61,19 +64,19 @@ latlngs1.push(user1.getLatLng());
 latlngs1.push(restaurant1.getLatLng());
 var polylineUser1Resto1 = L.polyline(latlngs1, {
     color: 'red'
-}).addTo(map);
+});
 
 latlngs2.push(user2.getLatLng());
 latlngs2.push(restaurant2.getLatLng());
 var polylineUser2Resto2 = L.polyline(latlngs2, {
     color: 'blue'
-}).addTo(map);
+});
 
 latlngs3.push(user3.getLatLng());
 latlngs3.push(restaurant3.getLatLng());
 var polylineUser3Resto3 = L.polyline(latlngs3, {
     color: 'green'
-}).addTo(map);
+});
 
 /* Lignes entre restos et arrivée */
 
@@ -85,19 +88,19 @@ latlngsarrivalUser1.push(restaurant1.getLatLng());
 latlngsarrivalUser1.push(arrivée.getLatLng());
 var polylineResto1Arrivee = L.polyline(latlngsarrivalUser1, {
     color: 'red'
-}).addTo(map);
+});
 
 latlngsarrivalUser2.push(restaurant2.getLatLng());
 latlngsarrivalUser2.push(arrivée.getLatLng());
 var polylineResto2Arrivee = L.polyline(latlngsarrivalUser2, {
     color: 'blue'
-}).addTo(map);
+});
 
 latlngsarrivalUser3.push(restaurant3.getLatLng());
 latlngsarrivalUser3.push(arrivée.getLatLng());
 var polylineResto3Arrivee = L.polyline(latlngsarrivalUser3, {
     color: 'green'
-}).addTo(map);
+});
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -116,46 +119,57 @@ console.log(
     getDistanceFromLatLonInKm(latlngsarrivalUser2)
 );
 
-let userInfo = [{
-        name: "theodore",
-        user: user1,
-        resto: restaurant1,
-        distance: 0,
-        polyline: polylineUser1Resto1,
-        polylineArrivee: polylineResto1Arrivee,
-        latlng: latlngs1,
-        latlngArrivee: latlngsarrivalUser1,
-        color: "red"
+// let userInfo = [{
+//         name: "theodore",
+//         user: user1,
+//         resto: restaurant1,
+//         distance: 0,
+//         polyline: polylineUser1Resto1,
+//         polylineArrivee: polylineResto1Arrivee,
+//         latlng: latlngs1,
+//         latlngArrivee: latlngsarrivalUser1,
+//         color: "red"
+//     },
+//     {
+//         name: "alex",
+//         user: user2,
+//         resto: restaurant2,
+//         distance: 0,
+
+//         polyline: polylineUser2Resto2,
+//         polylineArrivee: polylineResto2Arrivee,
+//         latlng: latlngs2,
+//         latlngArrivee: latlngsarrivalUser2,
+//         color: "blue"
+//     },
+//     {
+//         name: "jean",
+//         user: user3,
+//         resto: restaurant3,
+//         distance: 0,
+//         polyline: polylineUser3Resto3,
+//         polylineArrivee: polylineResto3Arrivee,
+//         latlng: latlngs3,
+//         latlngArrivee: latlngsarrivalUser3,
+//         color: "green"
+//     }
+// ];
+
+let userInfo = [];
+
+let restoList = [{
+        name: "",
+        resto: restaurant1
     },
     {
-        name: "alex",
-        user: user2,
-        resto: restaurant2,
-        distance: 0,
-
-        polyline: polylineUser2Resto2,
-        polylineArrivee: polylineResto2Arrivee,
-        latlng: latlngs2,
-        latlngArrivee: latlngsarrivalUser2,
-        color: "blue"
+        name: "a",
+        resto: restaurant2
     },
     {
-        name: "jean",
-        user: user3,
-        resto: restaurant3,
-        distance: 0,
-        polyline: polylineUser3Resto3,
-        polylineArrivee: polylineResto3Arrivee,
-        latlng: latlngs3,
-        latlngArrivee: latlngsarrivalUser3,
-        color: "green"
-    }
-];
+        name: "",
+        resto: restaurant3
+    },
 
-let restoList = [
-    restaurant1,
-    restaurant2,
-    restaurant3
 ]
 
 arrivée.on("dragstart", () => {
@@ -266,53 +280,103 @@ function onDragUser() {
 }
 onDragUser();
 
-function createUser() {
+function testFunc() {
+    console.log("hello");
+}
+
+function createUser(newInfo) {
 
     newLat = Math.random() * (48.90196633008333 - 48.81748960529015) + 48.81748960529015;
     newLng = Math.random() * (2.4282922124201405 - 2.2858681569280086) + 2.2858681569280086;
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+
     var newUserInfo = {
-        name: "ophelia",
+        name: newInfo.name,
         user: L.marker([newLat, newLng], {
             icon: manIcon,
             draggable: true
 
-        }).addTo(map),
+        }),
 
-        resto: restoList[0],
+        resto: restoList.find(resto => resto.name == newInfo.resto).resto,
         distance: 0,
         polyline: null,
         latlng: null,
         latlngArrivee: null,
         polylineArrivee: null,
-        color: "yellow"
+        color: "rgb(" + r + " ," + g + "," + b + ")"
     };
 
     var latlngsNew = Array();
     latlngsNew.push(newUserInfo.user.getLatLng());
     latlngsNew.push(newUserInfo.resto.getLatLng());
-    var polylineNewUserResto = L.polyline(latlngsNew, {
-        color: newUserInfo.color
-    }).addTo(map);
 
-    newUserInfo.polyline = polylineNewUserResto;
+
+
+    // newUserInfo.polyline = polylineNewUserResto;
 
     var latlngArrivalNewUser = Array();
     latlngArrivalNewUser.push(newUserInfo.resto.getLatLng());
-    
-    console.log(arrivée.getLatLng());
     latlngArrivalNewUser.push(arrivée.getLatLng());
-    var polylineRestoArrivee = L.polyline(latlngArrivalNewUser, {
-        color: newUserInfo.color
-    }).addTo(map);
+
+
 
     newUserInfo.latlng = latlngsNew;
     newUserInfo.latlngArrivee = latlngArrivalNewUser;
+
+    // newUserInfo.polylineArrivee = polylineRestoArrivee;
+
+    // userInfo.push(newUserInfo);
+
+    console.log(userInfo.length);
+
+
+    let stringInfo = {
+        name: newUserInfo.name,
+        resto: restoList.find(resto => resto.name == newInfo.resto).name,
+        distance: newUserInfo.distance,
+        latlng: newUserInfo.latlng,
+        latlngArrivee: newUserInfo.latlngArrivee,
+        color: newUserInfo.color,
+    }
+    return stringInfo;
+}
+
+
+function addNewUserToMap(user) {
+    var newUserInfo = {
+        name: user.name,
+        user: L.marker([user.latlng[0].lat, user.latlng[0].lng], {
+            icon: manIcon,
+            draggable: true
+
+        }).addTo(map),
+
+        resto: restoList.find(resto => resto.name == user.resto).resto,
+        distance: user.distance,
+        polyline: null,
+        latlng: user.latlng,
+        latlngArrivee: user.latlngArrivee,
+        polylineArrivee: null,
+        color: user.color
+    };
+
+    var polylineNewUserResto = L.polyline(user.latlng, {
+        color: user.color
+    }).addTo(map);
+
+    var polylineRestoArrivee = L.polyline(user.latlngArrivee, {
+        color: user.color
+    }).addTo(map);
+
+    newUserInfo.polyline = polylineNewUserResto;
     newUserInfo.polylineArrivee = polylineRestoArrivee;
 
     userInfo.push(newUserInfo);
 
-    console.log(userInfo.length);
+    
+    onDragUser();   
 
-    onDragUser();
 }
-
