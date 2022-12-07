@@ -12,23 +12,55 @@
 
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
         integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-
 </head>
 
 <body>
+    <div class="container">
+        <div id="map"></div>
+        <button onclick="changeResto(0)">1</button>
+        <button onclick="changeResto(1)">2</button>
+        <button onclick="changeResto(2)">3</button>
 
-    <!-- rand lat: 48.90196633008333,  lng: 2.2858681569280086 -->
-    <!-- rand lat: 48.81748960529015,  lng: 2.4282922124201405 -->
-    <div id="map"></div>
-    <button onclick="changeResto(0)">1</button>
-    <button onclick="changeResto(1)">2</button>
-    <button onclick="changeResto(2)">3</button>
+        <button onclick=" createUser()"></button>
 
-    <button onclick=" createUser()"></button>
+        <ul id="messages"></ul>
 
+        <form id="form" action="">
+            <input id="input" autocomplete="off" /><button>Send</button>
+        </form>
+    </div>
 
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
+        integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous">
+    </script>
 
-    <script src="script.js"></script>
+    <script>
+        let socket = io("http://localhost:3000/");
+
+        let messages = document.getElementById('messages');
+        let form = document.getElementById('form');
+        let input = document.getElementById('input');
+
+        form.addEventListener('submit', function (e) {
+            console.log("input.value", input.value);
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                input.value = '';
+            }
+        });
+
+        socket.on('cha', function (msg) {
+            console.log("gg");
+            let item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="index.js"></script>
 </body>
 
 </html>
