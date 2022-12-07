@@ -29,9 +29,9 @@
                     <label for="name">Restaurants:</label>
                     <input list="Restaurants" name="Restaurant" id="Restaurant" required="required">
                     <datalist id="Restaurants">
-                      <option value="MCdo">  </option>
-                      <option value="KFC">   </option>
-                      <option value="BK">  </option>
+                        <option value="MCdo"> </option>
+                        <option value="KFC"> </option>
+                        <option value="BK"> </option>
                     </datalist>
                     <button onclick="myFunction()" id="button">Send</button>
                 </form>
@@ -53,22 +53,24 @@
             <ul id="infosuser"></ul>
 
         </div>
-        <div>
-            <h3>Chat :</h3>
-            <ul id="messages"></ul>
+        <div class="containerchat">
+            <div>
+                <h3>Chat :</h3>
+                <ul id="messages"></ul>
+            </div>
+
+            <form id="form" action="">
+                <input id="input" autocomplete="off" /><button>Send</button>
+            </form>
         </div>
 
-        <form id="form" action="">
-            <input id="input" autocomplete="off" /><button>Send</button>
-        </form>
     </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
         integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous">
     </script>
 
-    <script> 
-
+    <script>
         function myFunction() {
             document.getElementById("modal").classList.add("none");
         }
