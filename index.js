@@ -21,8 +21,19 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
-    socket.emit('cha', msg)
+    io.emit('cha', msg)
   });
+
+  socket.on('name', (infos) => {
+    console.log('message: ' + infos);
+    socket.emit('informations', infos)
+  });
+
+  socket.on('restaurants', (infos) => {
+    console.log('message: ' + infos);
+    socket.emit('informations', infos)
+  });
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
