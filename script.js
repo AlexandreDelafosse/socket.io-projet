@@ -246,7 +246,7 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-function onDragOneUser(user) {
+function onDragOneUser(user, theId) {
 
     user.user.on("dragstart", () => {
         map.removeLayer(user.polyline);
@@ -266,14 +266,15 @@ function onDragOneUser(user) {
         user.distance = getDistanceFromLatLonInKm(user.latlng) +
             getDistanceFromLatLonInKm(user.latlngArrivee);
 
-        let stringInfo = {
+            console.log("user.resto ", user.resto);
+        let stringInfo = [{
             name: user.name,
-            resto: user.resto,
+            // resto: user.resto,
             distance: user.distance,
             latlng: user.latlng,
             latlngArrivee: user.latlngArrivee,
             color: user.color,
-        };
+        },theId];
 
         socket.emit("changeInfoUser", stringInfo)
     });
@@ -282,7 +283,7 @@ function onDragOneUser(user) {
 function onDragUser() {
     for (let index = 0; index < userInfo.length; index++) {
 
-        onDragOneUser(userInfo[index])
+        onDragOneUser(userInfo[index], index)
     }
 
 }

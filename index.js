@@ -38,10 +38,15 @@ io.on('connection', (socket) => {
 
   socket.on("changeInfoUser", (newInfoUser) => {
     // io.emit("moveUser", allUsers);
-    console.log(newInfoUser);
-    allUsers[newInfoUser[1]] = newInfoUser[0];
+    // console.log("newInfoUser[0]", newInfoUser[0].distance);
+    // console.log("allUsers[newInfoUser[1]]", allUsers[newInfoUser[1]]);
+    console.log("index ", newInfoUser[0]);
+    console.log("length ", allUsers.length);
+    
+    allUsers[0].distance = newInfoUser[0].distance;
+    allUsers[0].latlng = newInfoUser[0].latlng;
+    allUsers[0].latlngArrivee = newInfoUser[0].latlngArrivee;
     io.emit("showUsers", allUsers);
-
   })
 
 

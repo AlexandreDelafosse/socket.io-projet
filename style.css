@@ -53,10 +53,10 @@ body {
 
 #map {
     height: 500px;
-    width: 50vw;
+    width: 100vw;
 }
 
 .container{
-    display: flex;
+    /* display: flex; */
     justify-content: space-around;
 }
