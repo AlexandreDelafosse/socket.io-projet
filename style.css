@@ -88,7 +88,7 @@ list-style: none;
 
 /* Modale */
 #modal {
-    display: none; 
+    /* display: none;  */
     position: fixed;
     /* Stay in place */
     z-index: 1;
