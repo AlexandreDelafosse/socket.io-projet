@@ -39,8 +39,6 @@ io.on('connection', (socket) => {
     io.emit('listrestaurant', testtest)
   });
 
-
-
   socket.on('restaurants', (infos) => {
     socket.emit('informations',infos)
   });

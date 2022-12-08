@@ -92,6 +92,8 @@
     <script>
         let socket = io("http://localhost:3000/");
 
+        let newuser; 
+
         let messages = document.getElementById('messages');
         let form = document.getElementById('form');
         let input = document.getElementById('input');
@@ -110,15 +112,7 @@
             e.preventDefault();
             if (input2.value) {
                 socket.emit('name', input2.value);
-                input2.value = '';
-            }
-        });
-
-        form2.addEventListener('submit', function (e) {
-            console.log("input2.value", input2.value);
-            e.preventDefault();
-            if (input2.value) {
-                io.emit('name', input2.value);
+                newuser.name = input2.value;
                 input2.value = '';
             }
         });
@@ -156,6 +150,7 @@
             e.preventDefault();
             if (input3.value) {
                 socket.emit('restaurants', input3.value);
+                newuser.restaurant = input3.value;
                 input3.value = '';
             }
         });
