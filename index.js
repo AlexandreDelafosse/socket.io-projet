@@ -25,16 +25,21 @@ io.on('connection', (socket) => {
   });
 
   socket.on('name', (infos) => {
-    console.log('message: ' + infos);
+    console.log('username: ' + infos);
     socket.emit('informations', infos)
+  });
+
+  socket.on('name', (infos) => {
+    console.log('username: ' + infos);
+    io.emit('listofconnected', infos)
   });
 
   socket.on('restaurants', (infos) => {
-    console.log('message: ' + infos);
+    console.log('restaurant: ' + infos);
     socket.emit('informations', infos)
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', (infos) => {
     console.log('user disconnected');
   });
 

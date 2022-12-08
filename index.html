@@ -18,8 +18,16 @@
 
 
 
-    <div class="container">
+    <div class="headercontainer">
+        <div id="test">
+        </div>
+        <div>
+            <h3>Vos infos :</h3>
+            <ul id="infosuser"></ul>
 
+        </div>
+    </div>
+    <div class="globalcontainer">
         <div id="modal">
             <div class="modal-content">
                 <form id="form2">
@@ -43,17 +51,18 @@
             <button onclick="changeResto(1)">2</button>
             <button onclick="changeResto(2)">3</button>
 
-            <button onclick=" createUser()">add friends</button>
-
         </div>
 
         <div id="map"></div>
-        <div>
-            <h3>Vos infos :</h3>
-            <ul id="infosuser"></ul>
-
-        </div>
         <div class="containerchat">
+            <div>
+                Utilisateurs connecté(s) :
+                <div id="listusers">
+
+                </div>
+            </div>
+
+
             <div>
                 <h3>Chat :</h3>
                 <ul id="messages"></ul>
@@ -63,7 +72,7 @@
                 <input id="input" autocomplete="off" /><button>Send</button>
             </form>
         </div>
-
+    </div>
     </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
@@ -89,6 +98,7 @@
 
         let form3 = document.getElementById('form3');
         let input3 = document.getElementById('Restaurant');
+        let listofusers = document.getElementById('listusers');
 
         form2.addEventListener('submit', function (e) {
             console.log("input3.value", input3.value);
@@ -103,7 +113,6 @@
             let item = document.createElement('li');
             item.textContent = infos;
             datas.appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
         });
 
         form2.addEventListener('submit', function (e) {
@@ -115,11 +124,25 @@
             }
         });
 
+        form2.addEventListener('submit', function (e) {
+            console.log("input2.value", input2.value);
+            e.preventDefault();
+            if (input2.value) {
+                io.emit('name', input2.value);
+                input2.value = '';
+            }
+        });
+
+        socket.on('listofconnected', function (infos) {
+            let item = document.createElement('li');
+            item.textContent = infos;
+            listofusers.appendChild(item);
+        });
+
         socket.on('informations', function (infos) {
             let item = document.createElement('li');
             item.textContent = infos;
             datas.appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
         });
 
 

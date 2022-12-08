@@ -243,7 +243,7 @@ function deg2rad(deg) {
 
 function onDragUser() {
     userInfo.forEach(theUser => {
-        console.log(userInfo.length);
+        // console.log(userInfo.length);
 
         theUser.user.on("dragstart", () => {
             map.removeLayer(theUser.polyline);
@@ -298,7 +298,7 @@ function createUser() {
 
     var latlngArrivalNewUser = Array();
     latlngArrivalNewUser.push(newUserInfo.resto.getLatLng());
-    
+
     console.log(arrivée.getLatLng());
     latlngArrivalNewUser.push(arrivée.getLatLng());
     var polylineRestoArrivee = L.polyline(latlngArrivalNewUser, {
@@ -308,27 +308,64 @@ function createUser() {
     newUserInfo.latlng = latlngsNew;
     newUserInfo.latlngArrivee = latlngArrivalNewUser;
     newUserInfo.polylineArrivee = polylineRestoArrivee;
+    newUserInfo.distance =
+        getDistanceFromLatLonInKm(newUserInfo.latlng) +
+        getDistanceFromLatLonInKm(latlngArrivalNewUser)
+
+    let userdistance = newUserInfo.distance
+
+    userdistance = userdistance.toFixed(1)
+
+    console.log(
+        "longueur user1: ", userdistance, "km"
+    );
+
+    var speed = 5;
+
+    var time = (userdistance / speed) * 60;
+
+    console.log(time, 'mins');
+
+    var heurededepart = (780 - time) / 60;
+
+    var heurededepart2 = '' + heurededepart;
+    heurededepart2.split('.')
+    console.log(heurededepart2.split('.'));
+
+
+    var minutes = (heurededepart2[1] / 100) * 60;
+    console.log(minutes)
+
+    function timeConvert(n) {
+        var num = n;
+        var hours = (num / 60);
+        var rhours = Math.floor(hours);
+        var minutes = (hours - rhours) * 60;
+        var rminutes = Math.round(minutes);
+
+        let debutmsg = document.getElementById('test')
+        let suitemsg = document.createElement('span')
+        suitemsg.innerHTML = "Pour arriver à 13 h, vous devez partir à : " + heurededepart2.split('.')[0] + " heure et " + rminutes + " minute(s).";
+        debutmsg.append(suitemsg);
+        return  " vous devez partir à : " + heurededepart2.split('.')[0] + " heure et " + rminutes + " minute(s).";
+    }
+
+    console.log(timeConvert(time));
+
 
     userInfo.push(newUserInfo);
 
-    console.log(userInfo.length);
+    //console.log(userInfo.length);
 
     onDragUser();
 }
 
-
-
 // Get the modal
 var modal = document.getElementById("myModal");
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 }
