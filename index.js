@@ -30,16 +30,22 @@ io.on('connection', (socket) => {
   });
 
   socket.on('name', (infos) => {
-    console.log('username: ' + infos);
-    io.emit('listofconnected', infos)
+    let userlist = ' Nom : ' + infos
+    io.emit('listofconnected', userlist)
   });
 
   socket.on('restaurants', (infos) => {
-    console.log('restaurant: ' + infos);
-    socket.emit('informations', infos)
+    let testtest = 'Restaurant : ' + infos
+    io.emit('listrestaurant', testtest)
   });
 
-  socket.on('disconnect', (infos) => {
+
+
+  socket.on('restaurants', (infos) => {
+    socket.emit('informations',infos)
+  });
+
+  socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 

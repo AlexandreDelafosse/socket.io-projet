@@ -26,53 +26,57 @@
             <ul id="infosuser"></ul>
 
         </div>
-    </div>
-    <div class="globalcontainer">
-        <div id="modal">
-            <div class="modal-content">
-                <form id="form2">
-                    <label for="name">Nom:</label>
-                    <input type="text" name="name" id="input2" required="required">
-
-                    <label for="name">Restaurants:</label>
-                    <input list="Restaurants" name="Restaurant" id="Restaurant" required="required">
-                    <datalist id="Restaurants">
-                        <option value="MCdo"> </option>
-                        <option value="KFC"> </option>
-                        <option value="BK"> </option>
-                    </datalist>
-                    <button onclick="myFunction()" id="button">Send</button>
-                </form>
-            </div>
-        </div>
-
         <div>
             <button onclick="changeResto(0)">1</button>
             <button onclick="changeResto(1)">2</button>
             <button onclick="changeResto(2)">3</button>
 
         </div>
+    </div>
 
-        <div id="map"></div>
-        <div class="containerchat">
-            <div>
-                Utilisateurs connecté(s) :
-                <div id="listusers">
+    <div id="modal">
+        <div class="modal-content">
+            <form id="form2">
+                <label for="name">Nom:</label>
+                <input type="text" name="name" id="input2" required="required">
 
-                </div>
-            </div>
-
-
-            <div>
-                <h3>Chat :</h3>
-                <ul id="messages"></ul>
-            </div>
-
-            <form id="form" action="">
-                <input id="input" autocomplete="off" /><button>Send</button>
+                <label for="name">Restaurants:</label>
+                <input list="Restaurants" name="Restaurant" id="Restaurant" required="required">
+                <datalist id="Restaurants">
+                    <option value="MCdo"> </option>
+                    <option value="KFC"> </option>
+                    <option value="BK"> </option>
+                </datalist>
+                <button onclick="myFunction()" id="button">Send</button>
             </form>
         </div>
     </div>
+
+
+    <div class="globalcontainer">
+
+        <div id="map"></div>
+        <div class="containercontainerchat">
+            <div>
+                <div>
+                    Utilisateurs connecté(s) :
+                    <div id="listusers">
+                        <div id="listusernameconnected"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="containerchat">
+
+                <div>
+                    <h3>Chat :</h3>
+                    <ul id="messages"></ul>
+                </div>
+
+                <form id="form" action="">
+                    <input id="input" autocomplete="off" /><button>Send</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
@@ -98,22 +102,8 @@
 
         let form3 = document.getElementById('form3');
         let input3 = document.getElementById('Restaurant');
-        let listofusers = document.getElementById('listusers');
 
-        form2.addEventListener('submit', function (e) {
-            console.log("input3.value", input3.value);
-            e.preventDefault();
-            if (input3.value) {
-                socket.emit('restaurants', input3.value);
-                input3.value = '';
-            }
-        });
-
-        socket.on('restaurantschoisis', function (infos) {
-            let item = document.createElement('li');
-            item.textContent = infos;
-            datas.appendChild(item);
-        });
+        let listofusers = document.getElementById('listusernameconnected');
 
         form2.addEventListener('submit', function (e) {
             console.log("input2.value", input2.value);
@@ -139,6 +129,12 @@
             listofusers.appendChild(item);
         });
 
+        socket.on('listrestaurant', function (infos) {
+            let item = document.createElement('li');
+            item.textContent = infos;
+            listofusers.appendChild(item);
+        });
+
         socket.on('informations', function (infos) {
             let item = document.createElement('li');
             item.textContent = infos;
@@ -153,6 +149,21 @@
                 socket.emit('chat message', input.value);
                 input.value = '';
             }
+        });
+
+        form2.addEventListener('submit', function (e) {
+            console.log("input3.value", input3.value);
+            e.preventDefault();
+            if (input3.value) {
+                socket.emit('restaurants', input3.value);
+                input3.value = '';
+            }
+        });
+
+        socket.on('restaurantschoisis', function (infos) {
+            let item = document.createElement('li');
+            item.textContent = infos;
+            datas.appendChild(item);
         });
 
         socket.on('cha', function (msg) {
