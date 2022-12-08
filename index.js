@@ -24,28 +24,33 @@ server.listen(3000, () => {
 io.on('connection', (socket) => {
   console.log(' user connected');
 
-  socket.on("getUsers", () => {
-    io.emit("getAllUser", allUsers);
-
-  });
-
-  socket.on('addOneUser', (user) => {
-    if (allUsers.find(oldUser => oldUser.name !== user.name) || allUsers.length == 0) {
-      allUsers.push(user);
-      
+  socket.on("myConnexion", (newUser) => {
+    if (allUsers.find(oldUser => oldUser.name !== newUser.name) || allUsers.length == 0) {
+      allUsers.push(newUser);
+      // console.log("la longueur", allUsers);
+      io.emit("showUsers", allUsers);
     } else {
+
       console.log("deja user");
     }
-    io.emit("showUser", allUsers[0]);
 
   });
+
+  socket.on("changeInfoUser", (newInfoUser) => {
+    // io.emit("moveUser", allUsers);
+    console.log(newInfoUser);
+    allUsers[newInfoUser[1]] = newInfoUser[0];
+    io.emit("showUsers", allUsers);
+
+  })
+
 
 
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
 
     console.log(allUsers);
-    socket.emit('cha', msg);
+    io.emit('cha', msg);
 
   });
 

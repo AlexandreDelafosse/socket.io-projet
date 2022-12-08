@@ -1,4 +1,4 @@
-// const {parse, stringify} = require('flatted/cjs');
+let socket = io("http://localhost:3000/");
 
 let map = L.map('map').setView([48.866964576087014, 2.3514963324831593], 12);
 
@@ -108,16 +108,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-console.log(
-    "longueur user1: ",
-    getDistanceFromLatLonInKm(latlngs1) +
-    getDistanceFromLatLonInKm(latlngsarrivalUser1)
-);
-console.log(
-    "longueur user 2: ",
-    getDistanceFromLatLonInKm(latlngs2) +
-    getDistanceFromLatLonInKm(latlngsarrivalUser2)
-);
 
 // let userInfo = [{
 //         name: "theodore",
@@ -212,6 +202,7 @@ function updateArrive() {
 
     });
 
+
 }
 
 // wrap map.locate in a function    
@@ -255,34 +246,48 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-function onDragUser() {
-    userInfo.forEach(theUser => {
-        console.log(userInfo.length);
+function onDragOneUser(user) {
 
-        theUser.user.on("dragstart", () => {
-            map.removeLayer(theUser.polyline);
-        });
-
-        theUser.user.on("dragend", () => {
-            theUser.latlng = [];
-
-            theUser.latlng.push(theUser.user.getLatLng());
-            theUser.latlng.push(theUser.resto.getLatLng());
-            theUser.polyline = L.polyline(theUser.latlng, {
-                color: theUser.color
-            }).addTo(map);
-
-
-            theUser.distance = getDistanceFromLatLonInKm(theUser.latlng) +
-                getDistanceFromLatLonInKm(theUser.latlngArrivee)
-        })
+    user.user.on("dragstart", () => {
+        map.removeLayer(user.polyline);
+    
     });
+
+    user.user.on("dragend", () => {
+        user.latlng = [];
+
+        user.latlng.push(user.user.getLatLng());
+        user.latlng.push(user.resto.getLatLng());
+        user.polyline = L.polyline(user.latlng, {
+            color: user.color
+        }).addTo(map);
+
+
+        user.distance = getDistanceFromLatLonInKm(user.latlng) +
+            getDistanceFromLatLonInKm(user.latlngArrivee);
+
+        let stringInfo = {
+            name: user.name,
+            resto: user.resto,
+            distance: user.distance,
+            latlng: user.latlng,
+            latlngArrivee: user.latlngArrivee,
+            color: user.color,
+        };
+
+        socket.emit("changeInfoUser", stringInfo)
+    });
+}
+
+function onDragUser() {
+    for (let index = 0; index < userInfo.length; index++) {
+
+        onDragOneUser(userInfo[index])
+    }
+
 }
 onDragUser();
 
-function testFunc() {
-    console.log("hello");
-}
 
 function createUser(newInfo) {
 
@@ -313,14 +318,11 @@ function createUser(newInfo) {
     latlngsNew.push(newUserInfo.user.getLatLng());
     latlngsNew.push(newUserInfo.resto.getLatLng());
 
-
-
     // newUserInfo.polyline = polylineNewUserResto;
 
     var latlngArrivalNewUser = Array();
     latlngArrivalNewUser.push(newUserInfo.resto.getLatLng());
     latlngArrivalNewUser.push(arrivée.getLatLng());
-
 
 
     newUserInfo.latlng = latlngsNew;
@@ -345,7 +347,12 @@ function createUser(newInfo) {
 }
 
 
-function addNewUserToMap(user) {
+function addUserToMap(user) {
+    userInfo.forEach(theUser => {
+        map.removeLayer(theUser.polyline);
+        map.removeLayer(theUser.user);
+    });
+
     var newUserInfo = {
         name: user.name,
         user: L.marker([user.latlng[0].lat, user.latlng[0].lng], {
@@ -376,7 +383,51 @@ function addNewUserToMap(user) {
 
     userInfo.push(newUserInfo);
 
-    
-    onDragUser();   
-
+    console.log(userInfo);
+    onDragUser();
 }
+
+// ////////
+
+
+
+let messages = document.getElementById('messages');
+let form = document.getElementById('form');
+let input = document.getElementById('input');
+
+let newInfo = {
+    name: Math.random(),
+    resto: "a"
+}
+
+socket.emit("myConnexion", createUser(newInfo));
+
+socket.on("moveUser", () => {
+
+})
+
+socket.on("showUsers", (allServerUsers) => {
+    console.log("allServerUsers", allServerUsers);
+    allServerUsers.forEach(theUser => {
+        addUserToMap(theUser);
+
+    });
+});
+
+
+
+form.addEventListener('submit', function (e) {
+    console.log("input.value", input.value);
+    e.preventDefault();
+    if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+    }
+});
+
+socket.on('cha', function (msg) {
+    let item = document.createElement('li');
+    item.textContent = msg;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
+});
