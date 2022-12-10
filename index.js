@@ -27,25 +27,17 @@ io.on('connection', (socket) => {
   socket.on("myConnexion", (newUser) => {
     // if (allUsers.find(oldUser => oldUser.name !== newUser.name) || allUsers.length == 0) {
       allUsers.push(newUser);
-      // console.log("la longueur", allUsers);
       io.emit("showUsers", allUsers);
-    // } else {
-
-    //   console.log("deja user");
-    // }
-
   });
 
   socket.on("changeInfoUser", (newInfoUser) => {
     // io.emit("moveUser", allUsers);
-    // console.log("newInfoUser[0]", newInfoUser[0].distance);
-    // console.log("allUsers[newInfoUser[1]]", allUsers[newInfoUser[1]]);
     console.log("index ", newInfoUser[0]);
     console.log("length ", allUsers.length);
     
-    allUsers[0].distance = newInfoUser[0].distance;
-    allUsers[0].latlng = newInfoUser[0].latlng;
-    allUsers[0].latlngArrivee = newInfoUser[0].latlngArrivee;
+    allUsers[newInfoUser[1]].distance = newInfoUser[0].distance;
+    allUsers[newInfoUser[1]].latlng = newInfoUser[0].latlng;
+    allUsers[newInfoUser[1]].latlngArrivee = newInfoUser[0].latlngArrivee;
     io.emit("showUsers", allUsers);
   
   })

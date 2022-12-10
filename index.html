@@ -114,7 +114,6 @@
         let listofusers = document.getElementById('listusernameconnected');
 
         form2.addEventListener('submit', function (e) {
-            console.log("input2.value", input2.value);
             e.preventDefault();
             if (input2.value) {
                 socket.emit('name', input2.value);
@@ -143,7 +142,6 @@
 
 
         form.addEventListener('submit', function (e) {
-            console.log("input.value", input.value);
             e.preventDefault();
             if (input.value) {
                 socket.emit('chat message', input.value);
@@ -152,7 +150,6 @@
         });
 
         form2.addEventListener('submit', function (e) {
-            console.log("input3.value", input3.value);
             e.preventDefault();
             if (input3.value) {
                 socket.emit('restaurants', input3.value);

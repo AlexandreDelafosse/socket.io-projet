@@ -162,8 +162,6 @@ let restoList = [{
 ]
 
 arrivée.on("dragstart", () => {
-    console.log(userInfo.length);
-
     userInfo.forEach(theUser => {
         map.removeLayer(theUser.polylineArrivee);
     });
@@ -174,7 +172,6 @@ arrivée.on("dragstart", () => {
 
 arrivée.on("dragend", () => {
     updateArrive();
-    console.log(arrivée.getLatLng());
 })
 
 function updateArrive() {
@@ -189,8 +186,6 @@ function updateArrive() {
             color: theUser.color
         }).addTo(map);
 
-        console.log(theUser.name);
-        console.log(theUser.latlngArrivee);
         theUser.distance =
             getDistanceFromLatLonInKm(theUser.latlng) +
             getDistanceFromLatLonInKm(theUser.latlngArrivee);
@@ -248,6 +243,10 @@ function deg2rad(deg) {
 function onDragOneUser(user, theId) {
 
     user.user.on("dragstart", () => {
+        // console.log(user.name);
+        // console.log("drag start", user);
+
+        console.log(map.removeLayer(user.polyline));
         map.removeLayer(user.polyline);
 
     });
@@ -259,13 +258,12 @@ function onDragOneUser(user, theId) {
         user.latlng.push(user.resto.getLatLng());
         user.polyline = L.polyline(user.latlng, {
             color: user.color
-        }).addTo(map);
-
+        });
 
         user.distance = getDistanceFromLatLonInKm(user.latlng) +
             getDistanceFromLatLonInKm(user.latlngArrivee);
 
-        console.log("user ", user);
+
         let stringInfo = [{
             name: user.name,
             // resto: user.resto,
@@ -281,7 +279,6 @@ function onDragOneUser(user, theId) {
 
 function onDragUser() {
     for (let index = 0; index < userInfo.length; index++) {
-
         onDragOneUser(userInfo[index], index)
     }
 
@@ -297,7 +294,6 @@ function createUser(newInfo) {
     var g = Math.floor(Math.random() * 255);
     var b = Math.floor(Math.random() * 255);
 
-    console.log(newInfo);
     var newUserInfo = {
         name: newInfo.name,
         user: L.marker([newLat, newLng], {
@@ -329,13 +325,6 @@ function createUser(newInfo) {
     newUserInfo.latlng = latlngsNew;
     newUserInfo.latlngArrivee = latlngArrivalNewUser;
 
-    // newUserInfo.polylineArrivee = polylineRestoArrivee;
-
-    // userInfo.push(newUserInfo);
-
-    console.log(userInfo.length);
-
-
     let stringInfo = {
         name: newUserInfo.name,
         resto: restoList.find(resto => resto.name == newInfo.resto).name,
@@ -349,10 +338,16 @@ function createUser(newInfo) {
 
 
 function addUserToMap(user) {
-    userInfo.forEach(theUser => {
-        map.removeLayer(theUser.polyline);
-        map.removeLayer(theUser.user);
-    });
+
+    // userInfo.forEach(theUser => {
+    if (userInfo.findIndex(theUser => theUser.name === user.name) !== -1) {
+        let idFound = userInfo.findIndex(theUser => theUser.name === user.name);
+        map.removeLayer(userInfo[idFound].polyline);
+        map.removeLayer(userInfo[idFound].user);
+
+    }
+
+    // });
 
     var newUserInfo = {
         name: user.name,
@@ -382,9 +377,15 @@ function addUserToMap(user) {
     newUserInfo.polyline = polylineNewUserResto;
     newUserInfo.polylineArrivee = polylineRestoArrivee;
 
-    userInfo.push(newUserInfo);
 
-    console.log(userInfo);
+    if (userInfo.findIndex(theUser => theUser.name === user.name) < 0) {
+        userInfo.push(newUserInfo);
+
+    } else {
+        let idFound = userInfo.findIndex(theUser => theUser.name === user.name);
+        userInfo[idFound] = newUserInfo;
+    }
+
     onDragUser();
 }
 
@@ -398,7 +399,8 @@ socket2.on("moveUser", () => {
 })
 
 socket2.on("showUsers", (allServerUsers) => {
-    console.log("allServerUsers", allServerUsers);
+    // console.log("allServerUsers", allServerUsers);
+
     allServerUsers.forEach(theUser => {
         addUserToMap(theUser);
 
