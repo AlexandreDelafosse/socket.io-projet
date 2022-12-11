@@ -183,7 +183,18 @@ function timeConvert(n, magasin, username) {
 
     console.log(magasin);
     let heurededepartelement = document.getElementById('heurededepart');
-    heurededepartelement.innerHTML = "Pour arriver à 13 h, " + username + " doit partir à : " + magasin.split('.')[0] + " heure et " + rminutes + " minute(s).";
+    let spanHeure = document.createElement("span")
+    spanHeure.style.fontWeight = "bold";
+    spanHeure.innerHTML = magasin.split('.')[0];
+    let spanMinutes = document.createElement("span")
+    spanMinutes.style.fontWeight = "bold";
+    spanMinutes.innerHTML = (60 - rminutes);
+
+    heurededepartelement.innerHTML = "Pour arriver à 13 h, " + username + " doit partir à : " 
+    heurededepartelement.append(spanHeure);
+    heurededepartelement.innerHTML = heurededepartelement.innerHTML + " heure et ";
+    heurededepartelement.append(spanMinutes);
+    heurededepartelement.innerHTML = heurededepartelement.innerHTML + " minute(s).";
 }
 
 function createUser(newInfo) {
@@ -226,7 +237,7 @@ function createUser(newInfo) {
     newUserInfo.latlngArrivee = latlngArrivalNewUser;
 
     newUserInfo.distance = getDistanceFromLatLonInKm(newUserInfo.latlng) +
-    getDistanceFromLatLonInKm(newUserInfo.latlngArrivee);
+        getDistanceFromLatLonInKm(newUserInfo.latlngArrivee);
 
 
     let stringInfo = {
@@ -237,7 +248,7 @@ function createUser(newInfo) {
         latlngArrivee: newUserInfo.latlngArrivee,
         color: newUserInfo.color,
     }
-    
+
     let userdistance = newUserInfo.distance
 
     userdistance = userdistance.toFixed(1)
@@ -260,7 +271,7 @@ function createUser(newInfo) {
     debutmsg.append(suitemsg);
 
     timeConvert(time, heurededepart2, newUserInfo.name);
-    
+
     return stringInfo;
 }
 
@@ -300,25 +311,25 @@ function onDragOneUser(user, theId) {
         let userdistance = user.distance
 
         userdistance = userdistance.toFixed(1)
-    
+
         let speed = 5;
-    
+
         let time = (userdistance / speed) * 60;
-    
+
         let heurededepart = (780 - time) / 60;
-    
+
         let heurededepart2 = '' + heurededepart;
         heurededepart2.split('.')
-    
-    
+
+
         let minutes = (heurededepart2[1] / 100) * 60;
-    
+
         timeConvert(time, heurededepart2, user.name);
 
     });
 
 
-    
+
 }
 
 function onDragUser() {
@@ -355,7 +366,7 @@ function addUserToMap(user) {
         latlngArrivee: user.latlngArrivee,
         polylineArrivee: null,
         color: user.color
-        
+
     };
 
     let polylineNewUserResto = L.polyline(user.latlng, {
@@ -398,4 +409,3 @@ socket2.on("showUsers", (allServerUsers) => {
 
     });
 });
-

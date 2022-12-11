@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
-    io.emit('cha', msg)
+    io.emit('userChat', msg)
   });
   socket.on('chatBot', (msg) => {
     console.log('message: ' + msg);
