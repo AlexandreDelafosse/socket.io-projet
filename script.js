@@ -161,22 +161,33 @@ let restoList = [{
     },
 ]
 
+// let test = {
+//     "lat": 48.86448891012799,
+//     "lng": 2.3445476751280174
+// }
+
+// while (test.lat < 48.87) {
+//     test.lat+= 0.000000000001;
+//     arrivée._latlng.lat = test.lat;
+// }
+
 arrivée.on("dragstart", () => {
     userInfo.forEach(theUser => {
         map.removeLayer(theUser.polylineArrivee);
     });
 
-    console.log(arrivée.getLatLng());
 
 })
 
 arrivée.on("dragend", () => {
     updateArrive();
+    botMsg = "Quelqu'un a bougé l'arrivé!"
+    socket.emit('chatBot', botMsg);
 })
 
 function updateArrive() {
 
-    userInfo.forEach(theUser => {
+    userInfo.forEach((theUser, theIndex) => {
 
         theUser.latlngArrivee = [];
 
@@ -184,7 +195,7 @@ function updateArrive() {
         theUser.latlngArrivee.push(arrivée.getLatLng());
         theUser.polylineArrivee = L.polyline(theUser.latlngArrivee, {
             color: theUser.color
-        }).addTo(map);
+        });
 
         theUser.distance =
             getDistanceFromLatLonInKm(theUser.latlng) +
@@ -194,10 +205,33 @@ function updateArrive() {
             "longueur user: ", theUser.distance
         );
 
+        let stringInfo = [{
+            name: theUser.name,
+            // resto: user.resto,
+            distance: theUser.distance,
+            latlng: theUser.latlng,
+            latlngArrivee: theUser.latlngArrivee,
+            color: theUser.color,
+        }, theIndex];
+
+        socket2.emit("changeInfoArrivee", stringInfo);
+        socket2.emit("changeInfoUser", stringInfo);
     });
 
 
 }
+
+socket2.on("showArrivee", (pointArrivee) => {
+    map.removeLayer(arrivée);
+    arrivée._latlng.lat = pointArrivee.latlngArrivee.lat;
+    arrivée._latlng.lng = pointArrivee.latlngArrivee.lng;
+    arrivée.addTo(map);
+
+    userInfo.forEach(theUser => {
+        map.removeLayer(theUser.polylineArrivee)
+        theUser.polylineArrivee.addTo(map);
+    })
+})
 
 // wrap map.locate in a function    
 function getDistanceFromLatLonInKm(latLan) {
@@ -243,8 +277,6 @@ function deg2rad(deg) {
 function onDragOneUser(user, theId) {
 
     user.user.on("dragstart", () => {
-        // console.log(user.name);
-        // console.log("drag start", user);
 
         console.log(map.removeLayer(user.polyline));
         map.removeLayer(user.polyline);
@@ -290,9 +322,39 @@ function createUser(newInfo) {
 
     newLat = Math.random() * (48.90196633008333 - 48.81748960529015) + 48.81748960529015;
     newLng = Math.random() * (2.4282922124201405 - 2.2858681569280086) + 2.2858681569280086;
-    var r = Math.floor(Math.random() * 255);
+
+
+    var r = Math.floor(Math.random() * 200);
     var g = Math.floor(Math.random() * 255);
     var b = Math.floor(Math.random() * 255);
+
+    // // test
+    // let rnd = Math.floor(Math.random() * 2);
+    // switch (rnd) {
+    //     case 0:
+    //         r = 255;
+    //         g = 0;
+    //         b = 0
+    //         break;
+    //     case 1:
+    //         r = 0;
+    //         g = 0;
+    //         b = 255;
+    //         break;
+    //     case 1:
+    //         r = 0;
+    //         g = 255;
+    //         b = 0;
+    //         break;
+
+    //     default:
+    //         r = 255;
+    //         g = 0;
+    //         b = 0
+    //         break;
+    // }
+    // // fin test 
+
 
     var newUserInfo = {
         name: newInfo.name,
@@ -343,11 +405,10 @@ function addUserToMap(user) {
     if (userInfo.findIndex(theUser => theUser.name === user.name) !== -1) {
         let idFound = userInfo.findIndex(theUser => theUser.name === user.name);
         map.removeLayer(userInfo[idFound].polyline);
+        map.removeLayer(userInfo[idFound].polylineArrivee);
         map.removeLayer(userInfo[idFound].user);
 
     }
-
-    // });
 
     var newUserInfo = {
         name: user.name,
@@ -378,11 +439,11 @@ function addUserToMap(user) {
     newUserInfo.polylineArrivee = polylineRestoArrivee;
 
 
-    if (userInfo.findIndex(theUser => theUser.name === user.name) < 0) {
+    if (userInfo.findIndex(theUser => theUser.name == user.name) < 0) {
         userInfo.push(newUserInfo);
 
     } else {
-        let idFound = userInfo.findIndex(theUser => theUser.name === user.name);
+        let idFound = userInfo.findIndex(theUser => theUser.name == user.name);
         userInfo[idFound] = newUserInfo;
     }
 
@@ -406,3 +467,4 @@ socket2.on("showUsers", (allServerUsers) => {
 
     });
 });
+

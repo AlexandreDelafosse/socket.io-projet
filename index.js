@@ -13,6 +13,8 @@ const io = new Server(server, {
 
 let allUsers = [];
 
+let pointArrivee = {};
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
@@ -26,27 +28,47 @@ io.on('connection', (socket) => {
 
   socket.on("myConnexion", (newUser) => {
     // if (allUsers.find(oldUser => oldUser.name !== newUser.name) || allUsers.length == 0) {
-      allUsers.push(newUser);
-      io.emit("showUsers", allUsers);
+    allUsers.push(newUser);
+    io.emit("showUsers", allUsers);
   });
 
   socket.on("changeInfoUser", (newInfoUser) => {
     // io.emit("moveUser", allUsers);
     console.log("index ", newInfoUser[0]);
     console.log("length ", allUsers.length);
-    
+
     allUsers[newInfoUser[1]].distance = newInfoUser[0].distance;
     allUsers[newInfoUser[1]].latlng = newInfoUser[0].latlng;
     allUsers[newInfoUser[1]].latlngArrivee = newInfoUser[0].latlngArrivee;
     io.emit("showUsers", allUsers);
-  
-  })
 
+  });
+
+  socket.on("changeInfoArrivee", (newInfoArrivee) => {
+    // io.emit("moveUser", allUsers);
+    // console.log("index ", newInfoUser[0]);
+    // console.log("length ", allUsers.length);
+
+    pointArrivee.distance = newInfoArrivee[0].distance;
+    pointArrivee.latlngArrivee = newInfoArrivee[0].latlngArrivee[1];
+
+    allUsers.forEach(theUser => {
+      theUser.latlngArrivee[1] = newInfoArrivee[0].latlngArrivee[1];
+
+    });
+
+    io.emit("showArrivee", pointArrivee);
+
+  });
 
 
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
     io.emit('cha', msg)
+  });
+  socket.on('chatBot', (msg) => {
+    console.log('message: ' + msg);
+    io.emit('fromChatBot', msg)
   });
 
   socket.on('name', (infos) => {
@@ -65,11 +87,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('restaurants', (infos) => {
-    socket.emit('informations',infos)
+    socket.emit('informations', infos)
   });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    // allUsers.pop()
   });
 
 });
