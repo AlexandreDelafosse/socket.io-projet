@@ -342,25 +342,17 @@ function createUser(newInfo) {
 
     userdistance = userdistance.toFixed(1)
 
-    console.log(
-        "longueur user1: ", userdistance, "km"
-    );
-
     var speed = 5;
 
     var time = (userdistance / speed) * 60;
-
-    console.log(time, 'mins');
 
     var heurededepart = (780 - time) / 60;
 
     var heurededepart2 = '' + heurededepart;
     heurededepart2.split('.')
-    console.log(heurededepart2.split('.'));
 
 
     var minutes = (heurededepart2[1] / 100) * 60;
-    console.log(minutes)
 
     function timeConvert(n) {
         var num = n;
