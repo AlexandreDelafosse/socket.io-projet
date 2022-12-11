@@ -113,7 +113,7 @@
 
         let listofusers = document.getElementById('listusernameconnected');
 
-        form2.addEventListener('submit', function (e) {
+        form2.addEventListener('submit', function (e) { 
             e.preventDefault();
             if (input2.value) {
                 socket.emit('name', input2.value);
@@ -169,6 +169,13 @@
         socket.on('cha', function (msg) {
             let item = document.createElement('li');
             item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+        socket.on('fromChatBot', function (msg) {
+            let item = document.createElement('li');
+            item.textContent = msg;
+            item.style.color = "red"
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
         });
