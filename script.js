@@ -3,29 +3,36 @@ let socket2 = io("http://localhost:3000/");
 let map = L.map('map').setView([48.866964576087014, 2.3514963324831593], 12);
 
 let manIcon = L.icon({
-    iconUrl: 'redstonetorch.gif',
-    iconSize: [45, 75], // size of the icon
+    iconUrl: 'userIcon.png',
+    iconSize: [30, 30], // size of the icon
 });
 
-let restaurantIcon = L.icon({
-    iconUrl: 'restos.jpg',
-    iconSize: [45, 45], // size of the icon
-
+let mcdoIcon = L.icon({
+    iconUrl: 'mcdo.png',
+    iconSize: [30, 30], // size of the icon
+});
+let kfcIcon = L.icon({
+    iconUrl: 'kfc.png',
+    iconSize: [30, 30], // size of the icon
+});
+let bkIcon = L.icon({
+    iconUrl: 'bk.png',
+    iconSize: [30, 30], // size of the icon
 });
 
 /* create restaurant */
 let restaurant1 = L.marker([48.84901822720585, 2.312037311292086], {
-    icon: restaurantIcon,
+    icon: mcdoIcon,
     draggable: false
 }).addTo(map);
 
 let restaurant2 = L.marker([48.88221774694522, 2.3020809523222576], {
-    icon: restaurantIcon,
+    icon: kfcIcon,
     draggable: false
 }).addTo(map);
 
 let restaurant3 = L.marker([48.85901822720584, 2.42037311292085], {
-    icon: restaurantIcon,
+    icon: bkIcon,
     draggable: false
 }).addTo(map);
 
